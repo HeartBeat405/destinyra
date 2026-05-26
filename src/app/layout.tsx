@@ -3,9 +3,9 @@ import "./globals.css";
 
 import Script from "next/script";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
-
 import { Analytics } from "@vercel/analytics/react";
+
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title:
@@ -52,8 +52,11 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: "/image/og-banner.png",
+        url:
+          "https://destinyra.vercel.app/image/og-banner.png",
+
         width: 1200,
+
         height: 630,
       },
     ],
@@ -74,7 +77,7 @@ export const metadata: Metadata = {
       "Discover your life path and master number.",
 
     images: [
-      "/image/og-banner.png",
+      "https://destinyra.vercel.app/image/og-banner.png",
     ],
   },
 
@@ -96,14 +99,14 @@ export default function RootLayout({
         <Script
           async
           strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1856961818755959"
           crossOrigin="anonymous"
         />
 
         {children}
 
         {/* GOOGLE ANALYTICS */}
-        <GoogleAnalytics gaId="ca-pub-1856961818755959" />
+        <GoogleAnalytics gaId="G-E19FHS6T8J" />
 
         {/* VERCEL ANALYTICS */}
         <Analytics />
