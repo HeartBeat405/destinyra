@@ -103,7 +103,7 @@ export default function RootLayout({
         {children}
 
         {/* GOOGLE ANALYTICS */}
-        <GoogleAnalytics gaId="G-XXXXXXXXXX" />
+        <GoogleAnalytics gaId="ca-pub-1856961818755959" />
 
         {/* VERCEL ANALYTICS */}
         <Analytics />
