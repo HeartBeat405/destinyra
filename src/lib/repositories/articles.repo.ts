@@ -3,12 +3,6 @@ import { supabase, isSupabaseConfigured } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { ArticleInput } from "../validation/article.schema";
 import { estimateReadingTime } from "../util/article";
-import {
-  articles as seedArticles,
-  type SeedArticle,
-} from "../../data/articles";
-import { categories as seedCategories } from "../../data/categories";
-import { authors as seedAuthors } from "../../data/authors";
 
 // ------------------------------------------------------------
 // Articles repository — the ONLY place article data is fetched.
@@ -77,16 +71,6 @@ function mapRow(row: any): Article {
   };
 }
 
-// Seed mode: attach relations + synthesize status via in-memory lookup.
-function attachSeedRelations(a: SeedArticle): Article {
-  return {
-    ...a,
-    status: "published",
-    category: seedCategories.find((c) => c.slug === a.categorySlug),
-    author: seedAuthors.find((au) => au.id === a.authorId),
-  };
-}
-
 function byNewest(
   a: { publishedAt: string },
   b: { publishedAt: string }
@@ -139,10 +123,7 @@ export const articlesRepo = {
         .limit(limit);
       if (data) return data.map(mapRow);
     }
-    return [...seedArticles]
-      .sort(byNewest)
-      .slice(0, limit)
-      .map(attachSeedRelations);
+    return [];
   },
 
   // Admin: every article regardless of status.
@@ -156,10 +137,7 @@ export const articlesRepo = {
         .limit(limit);
       if (data) return data.map(mapRow);
     }
-    return [...seedArticles]
-      .sort(byNewest)
-      .slice(0, limit)
-      .map(attachSeedRelations);
+    return [];
   },
 
   async findBySlug(slug: string): Promise<Article | null> {
@@ -171,8 +149,7 @@ export const articlesRepo = {
         .single();
       if (data) return mapRow(data);
     }
-    const found = seedArticles.find((a) => a.slug === slug);
-    return found ? attachSeedRelations(found) : null;
+    return null;
   },
 
   async findByCategory(categorySlug: string): Promise<Article[]> {
@@ -203,10 +180,7 @@ export const articlesRepo = {
   // ---------- Writes (Supabase only; RLS via authenticated server client) ----------
 
   async findById(id: string): Promise<Article | null> {
-    if (!isSupabaseConfigured) {
-      const found = seedArticles.find((a) => a.id === id);
-      return found ? attachSeedRelations(found) : null;
-    }
+    if (!isSupabaseConfigured) return null;
     const db = await createServerSupabase();
     const { data } = await db
       .from("articles")

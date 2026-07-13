@@ -2,7 +2,6 @@ import type { Author } from "../types";
 import { supabase, isSupabaseConfigured } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { AuthorInput } from "../validation/author.schema";
-import { authors as seed } from "../../data/authors";
 
 function mapRow(a: any): Author {
   return {
@@ -54,11 +53,11 @@ export const authorsRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seed;
+    return [];
   },
 
   async findById(id: string): Promise<Author | null> {
-    if (!isSupabaseConfigured) return seed.find((a) => a.id === id) ?? null;
+    if (!isSupabaseConfigured) return null;
     const db = await createServerSupabase();
     const { data } = await db.from("authors").select("*").eq("id", id).single();
     return data ? mapRow(data) : null;
@@ -73,7 +72,7 @@ export const authorsRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seed;
+    return [];
   },
 
   async create(input: AuthorInput): Promise<Author | null> {

@@ -2,7 +2,6 @@ import type { Tool } from "../types";
 import { supabase, isSupabaseConfigured } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { ToolInput } from "../validation/tool.schema";
-import { tools as seed } from "../../data/tools";
 
 function mapRow(t: any): Tool {
   return {
@@ -58,7 +57,7 @@ export const toolsRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seed;
+    return [];
   },
 
   async findBySlug(slug: string): Promise<Tool | null> {
@@ -75,11 +74,11 @@ export const toolsRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seed;
+    return [];
   },
 
   async findById(id: string): Promise<Tool | null> {
-    if (!isSupabaseConfigured) return seed.find((t) => t.id === id) ?? null;
+    if (!isSupabaseConfigured) return null;
     const db = await createServerSupabase();
     const { data } = await db.from("tools").select("*").eq("id", id).single();
     return data ? mapRow(data) : null;

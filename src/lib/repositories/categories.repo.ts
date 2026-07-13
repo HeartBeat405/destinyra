@@ -2,9 +2,8 @@ import type { Category } from "../types";
 import { supabase, isSupabaseConfigured } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { CategoryInput } from "../validation/category.schema";
-import { categories as seed } from "../../data/categories";
 
-// Pure data access for categories. Supabase when configured, else seed.
+// Data access for categories (Supabase only).
 function mapRow(c: any): Category {
   return {
     id: c.id,
@@ -53,7 +52,7 @@ export const categoriesRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seed;
+    return [];
   },
 
   async findBySlug(slug: string): Promise<Category | null> {
@@ -71,11 +70,11 @@ export const categoriesRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seed;
+    return [];
   },
 
   async findById(id: string): Promise<Category | null> {
-    if (!isSupabaseConfigured) return seed.find((c) => c.id === id) ?? null;
+    if (!isSupabaseConfigured) return null;
     const db = await createServerSupabase();
     const { data } = await db
       .from("categories")

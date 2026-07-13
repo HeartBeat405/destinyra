@@ -10,10 +10,9 @@ import {
   Music2,
   Mail,
 } from "lucide-react";
-import { categories } from "../../data/categories";
 import Icon from "../ui/Icon";
 import { DEFAULT_SETTINGS } from "../../data/settings";
-import type { SiteSettings } from "../../lib/types";
+import type { SiteSettings, Category } from "../../lib/types";
 
 const columns = [
   {
@@ -36,8 +35,10 @@ const columns = [
 
 export default function Footer({
   settings = DEFAULT_SETTINGS,
+  categories = [],
 }: {
   settings?: SiteSettings;
+  categories?: Category[];
 }) {
   const { general, social, contact } = settings;
 

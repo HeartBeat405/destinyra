@@ -16,9 +16,11 @@ export async function signInAction(
   _prev: AuthState,
   formData: FormData
 ): Promise<AuthState> {
-  // Dev mode: no auth backend — the dev session is already a super admin.
+  // No auth backend => cannot sign in (no bypass, no auto-grant).
   if (!isSupabaseConfigured) {
-    redirect("/admin");
+    return {
+      error: "Authentication is not configured. Set Supabase credentials in .env.local.",
+    };
   }
 
   const parsed = SignInSchema.safeParse({
@@ -45,5 +47,5 @@ export async function signOutAction(): Promise<void> {
     const supabase = await createServerSupabase();
     await supabase.auth.signOut();
   }
-  redirect("/login");
+  redirect("/admin/login");
 }

@@ -6,7 +6,10 @@ import { Analytics } from "@vercel/analytics/react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 import SiteChrome from "../components/layout/SiteChrome";
+import InstallationRequired from "../components/InstallationRequired";
 import { getSiteSettings } from "../lib/site-settings";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { categoryService } from "../lib/services/category.service";
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSiteSettings();
@@ -70,6 +73,20 @@ export default async function RootLayout({
     sameAs: Object.values(settings.social).filter((v) => v.trim()),
   };
 
+  // Live-only: without Supabase there is no data — show installation instead.
+  if (!isSupabaseConfigured) {
+    return (
+      <html lang="en">
+        <body>
+          <style dangerouslySetInnerHTML={{ __html: brandVars }} />
+          <InstallationRequired />
+        </body>
+      </html>
+    );
+  }
+
+  const categories = await categoryService.getAll();
+
   return (
     <html lang={settings.general.language || "en"}>
       <body>
@@ -87,7 +104,9 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
 
-        <SiteChrome settings={settings}>{children}</SiteChrome>
+        <SiteChrome settings={settings} categories={categories}>
+          {children}
+        </SiteChrome>
 
         <GoogleAnalytics gaId="G-E19FHS6T8J" />
         <Analytics />

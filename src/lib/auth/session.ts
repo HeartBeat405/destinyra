@@ -18,16 +18,12 @@ export type SessionUser = {
   role: Role;
 };
 
-const DEV_USER: SessionUser = {
-  id: "dev-super-admin",
-  email: "dev@destinyra.local",
-  name: "Dev Admin",
-  role: "super_admin",
-};
-
+// No development bypass: admin access is granted ONLY via a real Supabase
+// session with an authorized role. When Supabase isn't configured there is
+// no way to authenticate, so no user is returned.
 export async function getCurrentUser(): Promise<SessionUser | null> {
   if (!isSupabaseConfigured) {
-    return DEV_USER;
+    return null;
   }
 
   const supabase = await createServerSupabase();

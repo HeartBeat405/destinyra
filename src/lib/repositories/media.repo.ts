@@ -1,7 +1,6 @@
 import type { Media, MediaType } from "../types";
 import { isSupabaseConfigured } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
-import { media as seedMedia } from "../../data/media";
 
 const BUCKET = "media";
 
@@ -38,7 +37,7 @@ export type NewMedia = {
 
 export const mediaRepo = {
   async findAll(limit = 500): Promise<Media[]> {
-    if (!isSupabaseConfigured) return seedMedia;
+    if (!isSupabaseConfigured) return [];
     const db = await createServerSupabase();
     const { data } = await db
       .from("media")
@@ -50,7 +49,7 @@ export const mediaRepo = {
 
   async findById(id: string): Promise<Media | null> {
     if (!isSupabaseConfigured) {
-      return seedMedia.find((m) => m.id === id) ?? null;
+      return null;
     }
     const db = await createServerSupabase();
     const { data } = await db.from("media").select("*").eq("id", id).single();

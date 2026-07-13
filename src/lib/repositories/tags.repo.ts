@@ -2,8 +2,6 @@ import type { Tag } from "../types";
 import { supabase, isSupabaseConfigured } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { TagInput } from "../validation/tag.schema";
-import { slugify } from "../util/article";
-import { articles as seedArticles } from "../../data/articles";
 
 function mapRow(t: any): Tag {
   const usage = Array.isArray(t.article_tags)
@@ -37,29 +35,6 @@ function toRow(input: TagInput) {
   };
 }
 
-// Dev fallback: derive tags (and usage counts) from seed article tag arrays.
-function seedTags(): Tag[] {
-  const counts = new Map<string, number>();
-  for (const a of seedArticles) {
-    for (const t of a.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
-  }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, count]) => ({
-      id: slugify(name),
-      name,
-      slug: slugify(name),
-      description: "",
-      order: 0,
-      featured: false,
-      visible: true,
-      seoTitle: "",
-      seoDescription: "",
-      archived: false,
-      usageCount: count,
-    }));
-}
-
 const SELECT = "*, article_tags(count)";
 
 export const tagsRepo = {
@@ -73,7 +48,7 @@ export const tagsRepo = {
         .order("sort_order", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seedTags();
+    return [];
   },
 
   async findAllAdmin(): Promise<Tag[]> {
@@ -85,7 +60,7 @@ export const tagsRepo = {
         .order("name", { ascending: true });
       if (data) return data.map(mapRow);
     }
-    return seedTags();
+    return [];
   },
 
   async create(input: TagInput): Promise<Tag | null> {
