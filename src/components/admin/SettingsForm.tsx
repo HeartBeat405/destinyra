@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Save, Check, AlertTriangle } from "lucide-react";
-import type { SiteSettings } from "../../lib/types";
+import { Save, Check, AlertTriangle, ImageIcon } from "lucide-react";
+import type { SiteSettings, Media } from "../../lib/types";
 import {
   LANGUAGE_OPTIONS,
   TWITTER_CARD_OPTIONS,
@@ -15,6 +15,54 @@ import {
   SelectField,
   ColorField,
 } from "./form/Fields";
+import MediaPicker from "./MediaPicker";
+
+// Image field: text URL + Browse (Media Library) + live preview. Kept at
+// module scope so typing in the input never loses focus on re-render.
+function ImageField({
+  label,
+  value,
+  onChange,
+  onBrowse,
+  hint,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  onBrowse: () => void;
+  hint?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-medium text-gray-400">{label}</span>
+      <div className="flex items-center gap-2">
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Pick from media or paste a URL"
+          className="editor-input"
+        />
+        <button
+          type="button"
+          onClick={onBrowse}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs hover:bg-white/10"
+        >
+          <ImageIcon className="h-3.5 w-3.5" />
+          Browse
+        </button>
+      </div>
+      {hint ? <span className="mt-1 block text-[11px] text-gray-500">{hint}</span> : null}
+      {value.trim() ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={value}
+          alt={`${label} preview`}
+          className="mt-2 h-12 w-auto rounded border border-white/10 bg-white/5 object-contain p-1"
+        />
+      ) : null}
+    </label>
+  );
+}
 
 type Section = keyof SiteSettings;
 const TABS: { key: Section; label: string }[] = [
@@ -37,6 +85,8 @@ export default function SettingsForm({
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  // Which general-tab image field the media picker targets.
+  const [picker, setPicker] = useState<null | "logoUrl" | "faviconUrl">(null);
 
   function set<S extends Section, K extends keyof SiteSettings[S]>(
     section: S,
@@ -90,14 +140,23 @@ export default function SettingsForm({
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField id="siteName" label="Site Name" required value={s.general.siteName} onChange={(v) => set("general", "siteName", v)} />
               <TextField id="tagline" label="Tagline" value={s.general.tagline} onChange={(v) => set("general", "tagline", v)} />
-              <TextField id="logoUrl" label="Logo URL" value={s.general.logoUrl} onChange={(v) => set("general", "logoUrl", v)} />
-              <TextField id="faviconUrl" label="Favicon URL" value={s.general.faviconUrl} onChange={(v) => set("general", "faviconUrl", v)} />
+              <ImageField label="Logo" value={s.general.logoUrl} onChange={(v) => set("general", "logoUrl", v)} onBrowse={() => setPicker("logoUrl")} hint="Shown in the header. Upload once in Media Library, then reuse — change it anytime here, no redeploy." />
+              <ImageField label="Favicon" value={s.general.faviconUrl} onChange={(v) => set("general", "faviconUrl", v)} onBrowse={() => setPicker("faviconUrl")} hint="Browser tab icon (use a square PNG/ICO)." />
               <SelectField id="language" label="Default Language" value={s.general.language} onChange={(v) => set("general", "language", v)} options={LANGUAGE_OPTIONS} />
               <TextField id="timezone" label="Timezone" value={s.general.timezone} onChange={(v) => set("general", "timezone", v)} />
               <TextField id="copyright" label="Copyright" value={s.general.copyright} onChange={(v) => set("general", "copyright", v)} />
               <TextAreaField id="footerText" label="Footer Text" value={s.general.footerText} onChange={(v) => set("general", "footerText", v)} rows={2} />
             </div>
           )}
+
+          <MediaPicker
+            open={picker !== null}
+            onClose={() => setPicker(null)}
+            onSelect={(m: Media) => {
+              if (picker) set("general", picker, m.url);
+              setPicker(null);
+            }}
+          />
 
           {tab === "brand" && (
             <div className="grid gap-4 sm:grid-cols-2">

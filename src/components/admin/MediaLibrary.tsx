@@ -113,12 +113,18 @@ export default function MediaLibrary({
     startTransition(async () => {
       let ok = 0;
       for (const file of Array.from(files)) {
-        const fd = new FormData();
-        fd.append("file", file);
-        fd.append("folder", folder === "all" ? "uploads" : folder);
-        const res = await uploadMediaAction(fd);
-        if (res.ok) ok++;
-        else notify(res.message ?? "Upload failed.");
+        try {
+          const fd = new FormData();
+          fd.append("file", file);
+          fd.append("folder", folder === "all" ? "uploads" : folder);
+          const res = await uploadMediaAction(fd);
+          if (res.ok) ok++;
+          else notify(res.message ?? "Upload failed.");
+        } catch {
+          notify(
+            `"${file.name}" couldn't upload — it may be too large (max 10 MB) or the connection dropped.`
+          );
+        }
       }
       if (ok > 0) {
         notify(`${ok} file(s) uploaded.`);
