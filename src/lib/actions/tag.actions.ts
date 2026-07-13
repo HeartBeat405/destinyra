@@ -22,6 +22,7 @@ async function authorize(action: Action) {
 function revalidateTags() {
   revalidatePath("/admin/tags");
   revalidatePath("/articles");
+  revalidatePath("/articles/[slug]", "page"); // tags on SSG detail pages
 }
 
 export async function saveTagAction(

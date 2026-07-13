@@ -57,6 +57,7 @@ function mapRow(row: any): Article {
       : [],
     seoTitle: row.seo_title ?? undefined,
     seoDescription: row.seo_description ?? undefined,
+    canonicalUrl: row.canonical_url ?? "",
     relatedTool: row.related_tool ?? "none",
     status: row.status ?? "published",
     featured: row.featured ?? false,

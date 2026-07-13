@@ -30,6 +30,10 @@ function revalidateArticle(slug?: string) {
   revalidatePath("/admin");
   revalidatePath("/"); // homepage hero + featured/trending/latest cards
   revalidatePath("/articles");
+  // All article detail pages are SSG — revalidate the whole segment so
+  // status changes / deletes / bulk edits don't leave stale (or deleted)
+  // pages publicly cached, even when we don't have the slug.
+  revalidatePath("/articles/[slug]", "page");
   if (slug) revalidatePath(`/articles/${slug}`);
 }
 

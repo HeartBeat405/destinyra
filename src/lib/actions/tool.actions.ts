@@ -22,6 +22,7 @@ async function authorize(action: Action) {
 function revalidateTools() {
   revalidatePath("/admin/tools");
   revalidatePath("/tools");
+  revalidatePath("/tools/[slug]", "page"); // SSG detail pages
   revalidatePath("/");
 }
 

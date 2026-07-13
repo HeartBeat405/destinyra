@@ -25,6 +25,8 @@ async function authorize(action: Action) {
 function revalidateCategories() {
   revalidatePath("/admin/categories");
   revalidatePath("/categories");
+  revalidatePath("/categories/[slug]", "page"); // SSG detail pages
+  revalidatePath("/articles"); // cards show category name/color
   revalidatePath("/");
 }
 

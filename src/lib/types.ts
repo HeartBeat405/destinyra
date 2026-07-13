@@ -81,6 +81,7 @@ export type Article = {
   tags: string[];
   seoTitle?: string;
   seoDescription?: string;
+  canonicalUrl?: string;
   relatedTool: RelatedTool;
   status: ArticleStatus;
   featured?: boolean;

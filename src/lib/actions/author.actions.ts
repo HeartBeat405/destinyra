@@ -22,6 +22,7 @@ async function authorize(action: Action) {
 function revalidateAuthors() {
   revalidatePath("/admin/authors");
   revalidatePath("/articles");
+  revalidatePath("/articles/[slug]", "page"); // bylines on SSG detail pages
 }
 
 export async function saveAuthorAction(

@@ -93,9 +93,9 @@ function toInput(a?: Article): ArticleInput {
     seoTitle: a?.seoTitle ?? "",
     seoDescription: a?.seoDescription ?? "",
     focusKeyword: "",
-    canonicalUrl: "",
-    // Loaded from the article's stored banner so editing/autosave never
-    // wipes it (Article.image maps from og_image_url).
+    // Loaded from stored values so editing/autosave never wipes them.
+    canonicalUrl: a?.canonicalUrl ?? "",
+    // Article.image maps from og_image_url.
     ogImageUrl: a?.image ?? "",
     scheduledAt: null,
   };
