@@ -541,14 +541,6 @@ export default function ArticleEditor({
                   placeholder={form.title}
                 />
               </Field>
-              <Field label="Focus Keyword">
-                <input
-                  value={form.focusKeyword}
-                  onChange={(e) => set("focusKeyword", e.target.value)}
-                  className="editor-input"
-                  placeholder="e.g. life path number"
-                />
-              </Field>
               <Field label={`Meta Description (${(form.seoDescription ?? "").length}/200)`}>
                 <textarea
                   value={form.seoDescription}
