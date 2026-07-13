@@ -10,11 +10,13 @@ import AdSlotRenderer from "../../../components/ads/AdSlotRenderer";
 
 type Params = { params: Promise<{ slug: string }> };
 
+// Tools that have their own dedicated, interactive route.
+const DEDICATED = ["life-path", "compatibility", "tarot", "angel-number"];
+
 export async function generateStaticParams() {
   const tools = await toolService.getAll();
-  // life-path has its own dedicated route.
   return tools
-    .filter((t) => t.slug !== "life-path")
+    .filter((t) => !DEDICATED.includes(t.slug))
     .map((t) => ({ slug: t.slug }));
 }
 

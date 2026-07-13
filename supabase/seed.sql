@@ -31,9 +31,9 @@ where not exists (select 1 from public.authors where name = 'Iris Calderon');
 -- ---------- Tools ----------
 insert into public.tools (name, slug, description, icon_name, gradient, button_text, button_link, status, visible, featured, sort_order) values
   ('Life Path Calculator', 'life-path',      'Reveal your core Life Path number and the personality blueprint behind your birth date.', 'Orbit',         'from-violet-600 to-purple-700', 'Discover Your Life Path', '/tools/life-path',      'published', true, true,  0),
-  ('Love Compatibility',   'compatibility',  'Compare two birth dates to see how your numbers harmonize in love and friendship.',        'HeartHandshake','from-rose-500 to-pink-600',    'Check Compatibility',     '/tools/compatibility',  'future',    true, false, 1),
-  ('Tarot Reading',        'tarot',          'Pull a card and receive focused guidance for the question on your mind right now.',        'Layers',        'from-purple-600 to-fuchsia-600','Draw Your Card',          '/tools/tarot',          'future',    true, false, 2),
-  ('Angel Number Decoder', 'angel-number',   'Enter a repeating number you keep seeing and decode the message behind it.',               'Feather',       'from-cyan-500 to-sky-600',     'Decode Your Number',      '/tools/angel-number',   'future',    true, false, 3)
+  ('Love Compatibility',   'compatibility',  'Compare two birth dates to see how your numbers harmonize in love and friendship.',        'HeartHandshake','from-rose-500 to-pink-600',    'Check Compatibility',     '/tools/compatibility',  'published', true, false, 1),
+  ('Tarot Reading',        'tarot',          'Pull a card and receive focused guidance for the question on your mind right now.',        'Layers',        'from-purple-600 to-fuchsia-600','Draw Your Card',          '/tools/tarot',          'published', true, false, 2),
+  ('Angel Number Decoder', 'angel-number',   'Enter a repeating number you keep seeing and decode the message behind it.',               'Feather',       'from-cyan-500 to-sky-600',     'Decode Your Number',      '/tools/angel-number',   'published', true, false, 3)
 on conflict (slug) do nothing;
 
 -- ---------- Articles ----------
