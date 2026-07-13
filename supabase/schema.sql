@@ -48,6 +48,26 @@ create table if not exists public.profiles (
 );
 
 -- ------------------------------------------------------------
+-- ROLE HELPERS
+-- Defined early because policies below (e.g. the media storage
+-- bucket) reference them. security definer lets them read
+-- profiles without tripping RLS.
+-- ------------------------------------------------------------
+create or replace function public.is_staff()
+returns boolean language sql stable security definer as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid()
+      and role in ('editor', 'admin', 'super_admin')
+  );
+$$;
+
+create or replace function public.my_role()
+returns user_role language sql stable security definer as $$
+  select role from public.profiles where id = auth.uid();
+$$;
+
+-- ------------------------------------------------------------
 -- AUTHORS  (public byline; may or may not map to a profile)
 -- ------------------------------------------------------------
 create table if not exists public.authors (
