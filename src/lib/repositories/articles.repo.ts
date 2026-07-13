@@ -64,6 +64,7 @@ function mapRow(row: any): Article {
     trending: row.trending ?? false,
     pinned: row.pinned ?? false,
     views: Number(row.views ?? 0),
+    image: row.og_image_url ?? "",
     iconName: row.icon_name ?? category?.iconName ?? "Sparkles",
     gradient: row.gradient ?? category?.gradient ?? "from-violet-600 to-purple-700",
     category,

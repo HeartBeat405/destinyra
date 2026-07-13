@@ -155,6 +155,8 @@ export default async function ArticlePage({ params }: Params) {
           <Thumbnail
             iconName={article.iconName}
             gradient={article.gradient}
+            image={article.image}
+            alt={article.title}
             size="lg"
             className="-mb-6 mt-8 h-72 w-full rounded-4xl border border-line sm:h-96"
           />

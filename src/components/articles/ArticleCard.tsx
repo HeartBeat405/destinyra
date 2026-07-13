@@ -22,6 +22,8 @@ export default function ArticleCard({ article, variant = "card" }: Props) {
         <Thumbnail
           iconName={article.iconName}
           gradient={article.gradient}
+          image={article.image}
+          alt={article.title}
           size="sm"
           className="h-16 w-16 shrink-0 rounded-xl"
         />
@@ -47,6 +49,8 @@ export default function ArticleCard({ article, variant = "card" }: Props) {
       <Thumbnail
         iconName={article.iconName}
         gradient={article.gradient}
+        image={article.image}
+        alt={article.title}
         className="h-44 w-full"
       />
       <div className="flex flex-1 flex-col p-5">

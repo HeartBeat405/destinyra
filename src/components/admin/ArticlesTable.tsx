@@ -231,6 +231,8 @@ export default function ArticlesTable({
                       <Thumbnail
                         iconName={a.iconName}
                         gradient={a.gradient}
+                        image={a.image}
+                        alt={a.title}
                         size="sm"
                         className="h-9 w-9 shrink-0 rounded-lg"
                       />

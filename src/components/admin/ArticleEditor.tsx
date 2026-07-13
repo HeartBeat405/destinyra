@@ -550,13 +550,13 @@ export default function ArticleEditor({
                   placeholder="https://…"
                 />
               </Field>
-              <Field label="OG / Social Image">
+              <Field label="Banner / Cover Image">
                 <div className="flex items-center gap-2">
                   <input
                     value={form.ogImageUrl}
                     onChange={(e) => set("ogImageUrl", e.target.value)}
                     className="editor-input"
-                    placeholder="Pick from media or paste a URL"
+                    placeholder="Pick from media or paste an image URL"
                   />
                   <button
                     type="button"
@@ -567,6 +567,18 @@ export default function ArticleEditor({
                     Browse
                   </button>
                 </div>
+                <p className="mt-1.5 text-xs text-white/40">
+                  Shown as the article banner and in article cards, and used as
+                  the social-share image. Leave empty to use the placeholder tile.
+                </p>
+                {form.ogImageUrl?.trim() ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={form.ogImageUrl}
+                    alt="Banner preview"
+                    className="mt-2 h-32 w-full rounded-lg border border-white/10 object-cover"
+                  />
+                ) : null}
               </Field>
             </div>
           </div>

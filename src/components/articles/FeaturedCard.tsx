@@ -18,6 +18,8 @@ export default function FeaturedCard({ article }: { article: Article }) {
       <Thumbnail
         iconName={article.iconName}
         gradient={article.gradient}
+        image={article.image}
+        alt={article.title}
         size="lg"
         className="h-64 w-full lg:h-full"
       />

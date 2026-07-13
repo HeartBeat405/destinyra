@@ -88,9 +88,11 @@ export type Article = {
   trending?: boolean;
   pinned?: boolean;
   views: number;
-  /** lucide icon name for the thumbnail glyph */
+  /** Banner / cover image URL (also used for social sharing). Empty = use placeholder tile. */
+  image?: string;
+  /** lucide icon name for the thumbnail glyph (fallback when no image) */
   iconName: string;
-  /** Tailwind gradient classes for the thumbnail */
+  /** Tailwind gradient classes for the thumbnail (fallback when no image) */
   gradient: string;
 
   // --- Denormalized relations (attached by the repository layer) ---
