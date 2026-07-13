@@ -218,6 +218,7 @@ create table if not exists public.articles (
   featured        boolean not null default false,
   editors_pick    boolean not null default false,
   trending        boolean not null default false,
+  pinned          boolean not null default false,
   related_tool    text default 'none',     -- tool slug or 'none'
   seo_title       text,
   seo_description text,
