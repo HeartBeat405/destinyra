@@ -3,7 +3,7 @@ import { TrendingUp, ArrowRight } from "lucide-react";
 import type { HomepageWidget } from "../../lib/types";
 import type { HomepageSections } from "../../lib/services/homepage.service";
 
-import Hero from "./Hero";
+import HeroCarousel from "./HeroCarousel";
 import FeaturedCard from "../articles/FeaturedCard";
 import ArticleCard from "../articles/ArticleCard";
 import CategoryCard from "../categories/CategoryCard";
@@ -22,7 +22,7 @@ export default function WidgetRenderer({ widget, sections }: Props) {
 
   switch (widget.type) {
     case "hero":
-      return <Hero />;
+      return <HeroCarousel articles={sections.latest} />;
 
     case "featured":
     case "editors-choice": {
