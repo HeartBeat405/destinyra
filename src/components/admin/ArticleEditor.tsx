@@ -581,10 +581,11 @@ export default function ArticleEditor({
                   </button>
                 </div>
                 <p className="mt-1.5 text-xs text-white/40">
-                  Recommended <strong>1200×630 px</strong> (≈1.9:1, landscape).
-                  Shown as the article banner (~800×400), in article cards, and
-                  as the social-share image. Leave empty to use the placeholder
-                  tile.
+                  Recommended <strong>1600×900 px</strong> (16:9, landscape).
+                  One image feeds the homepage hero slideshow, the article
+                  banner, cards, and social sharing — so keep the main subject
+                  centered and it won&apos;t look cut off when cropped to fit
+                  each spot. Leave empty to use the placeholder tile.
                 </p>
                 {form.ogImageUrl?.trim() ? (
                   // eslint-disable-next-line @next/next/no-img-element
