@@ -23,6 +23,7 @@ import ShareButtons from "../../../components/articles/ShareButtons";
 import ArticleCard from "../../../components/articles/ArticleCard";
 import AuthorCard from "../../../components/articles/AuthorCard";
 import ReadingProgress from "../../../components/articles/ReadingProgress";
+import ViewTracker from "../../../components/articles/ViewTracker";
 import TableOfContents from "../../../components/articles/TableOfContents";
 import BackToTop from "../../../components/articles/BackToTop";
 import Newsletter from "../../../components/ui/Newsletter";
@@ -77,6 +78,7 @@ export default async function ArticlePage({ params }: Params) {
   return (
     <>
       <ReadingProgress />
+      <ViewTracker articleId={article.id} />
 
       <script
         type="application/ld+json"

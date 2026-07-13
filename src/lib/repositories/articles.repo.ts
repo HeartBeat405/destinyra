@@ -1,5 +1,5 @@
 import type { Article, Author, Category } from "../types";
-import { supabase, isSupabaseConfigured } from "../supabase";
+import { supabase, isSupabaseConfigured, createAdminClient } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { ArticleInput } from "../validation/article.schema";
 import { estimateReadingTime } from "../util/article";
@@ -257,6 +257,24 @@ export const articlesRepo = {
     const db = await createServerSupabase();
     const { error } = await db.from("articles").delete().eq("id", id);
     return !error;
+  },
+
+  // Public view counter. Uses the service-role client because anonymous
+  // visitors have no write access under RLS. Read-then-write is fine for
+  // a view counter (a rare lost increment under heavy concurrency is
+  // acceptable and not worth an RPC/DDL round-trip).
+  async incrementViews(id: string): Promise<void> {
+    if (!isSupabaseConfigured || !id) return;
+    const admin = createAdminClient();
+    if (!admin) return;
+    const { data } = await admin
+      .from("articles")
+      .select("views")
+      .eq("id", id)
+      .single();
+    if (!data) return;
+    const next = Number(data.views ?? 0) + 1;
+    await admin.from("articles").update({ views: next }).eq("id", id);
   },
 
   async duplicate(id: string, nowIso: string): Promise<Article | null> {
