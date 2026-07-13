@@ -10,6 +10,41 @@ function fmt(n: number) {
   return n.toLocaleString("en-US");
 }
 
+// Small article thumbnail for dashboard lists: real banner image when set,
+// otherwise a compact gradient chip with the article's icon.
+function ArticleThumb({
+  image,
+  gradient,
+  iconName,
+  title,
+  className = "h-11 w-11",
+}: {
+  image?: string;
+  gradient: string;
+  iconName: string;
+  title: string;
+  className?: string;
+}) {
+  if (image) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return (
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        className={`shrink-0 rounded-lg object-cover ${className}`}
+      />
+    );
+  }
+  return (
+    <span
+      className={`flex shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} text-white ${className}`}
+    >
+      <Icon name={iconName} className="h-4 w-4" />
+    </span>
+  );
+}
+
 export default async function AdminDashboard() {
   const data = await dashboardService.getOverview();
   const { counts } = data;
@@ -65,10 +100,17 @@ export default async function AdminDashboard() {
             <h2 className="mb-4 text-lg font-bold">Top Articles</h2>
             <ol className="divide-y divide-white/5">
               {data.topArticles.map((a, i) => (
-                <li key={a.id} className="flex items-center gap-4 py-3">
+                <li key={a.id} className="flex items-center gap-3 py-3">
                   <span className="text-lg font-black text-white/20">
                     {String(i + 1).padStart(2, "0")}
                   </span>
+                  <ArticleThumb
+                    image={a.image}
+                    gradient={a.gradient}
+                    iconName={a.iconName}
+                    title={a.title}
+                    className="h-11 w-16"
+                  />
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/articles/${a.slug}`}
@@ -115,6 +157,13 @@ export default async function AdminDashboard() {
         <ul className="divide-y divide-white/5">
           {data.recentArticles.map((a) => (
             <li key={a.id} className="flex items-center gap-3 py-3">
+              <ArticleThumb
+                image={a.image}
+                gradient={a.gradient}
+                iconName={a.iconName}
+                title={a.title}
+                className="h-11 w-16"
+              />
               <div className="min-w-0 flex-1">
                 <p className="line-clamp-1 text-sm font-medium">{a.title}</p>
                 <p className="text-xs text-gray-500">

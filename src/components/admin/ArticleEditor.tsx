@@ -581,8 +581,10 @@ export default function ArticleEditor({
                   </button>
                 </div>
                 <p className="mt-1.5 text-xs text-white/40">
-                  Shown as the article banner and in article cards, and used as
-                  the social-share image. Leave empty to use the placeholder tile.
+                  Recommended <strong>1200×630 px</strong> (≈1.9:1, landscape).
+                  Shown as the article banner (~800×400), in article cards, and
+                  as the social-share image. Leave empty to use the placeholder
+                  tile.
                 </p>
                 {form.ogImageUrl?.trim() ? (
                   // eslint-disable-next-line @next/next/no-img-element

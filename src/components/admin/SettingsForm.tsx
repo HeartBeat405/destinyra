@@ -140,8 +140,8 @@ export default function SettingsForm({
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField id="siteName" label="Site Name" required value={s.general.siteName} onChange={(v) => set("general", "siteName", v)} />
               <TextField id="tagline" label="Tagline" value={s.general.tagline} onChange={(v) => set("general", "tagline", v)} />
-              <ImageField label="Logo" value={s.general.logoUrl} onChange={(v) => set("general", "logoUrl", v)} onBrowse={() => setPicker("logoUrl")} hint="Shown in the header. Upload once in Media Library, then reuse — change it anytime here, no redeploy." />
-              <ImageField label="Favicon" value={s.general.faviconUrl} onChange={(v) => set("general", "faviconUrl", v)} onBrowse={() => setPicker("faviconUrl")} hint="Browser tab icon (use a square PNG/ICO)." />
+              <ImageField label="Logo" value={s.general.logoUrl} onChange={(v) => set("general", "logoUrl", v)} onBrowse={() => setPicker("logoUrl")} hint="Transparent PNG, ~320×80 px (renders 32px tall in the header). Change anytime — no redeploy." />
+              <ImageField label="Favicon" value={s.general.faviconUrl} onChange={(v) => set("general", "faviconUrl", v)} onBrowse={() => setPicker("faviconUrl")} hint="Square PNG/ICO, 64×64 px (browser-tab icon)." />
               <SelectField id="language" label="Default Language" value={s.general.language} onChange={(v) => set("general", "language", v)} options={LANGUAGE_OPTIONS} />
               <TextField id="timezone" label="Timezone" value={s.general.timezone} onChange={(v) => set("general", "timezone", v)} />
               <TextField id="copyright" label="Copyright" value={s.general.copyright} onChange={(v) => set("general", "copyright", v)} />
