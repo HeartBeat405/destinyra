@@ -8,6 +8,7 @@ import {
   decodeAngelNumber,
   type AngelReading,
 } from "../../../features/angel-number/data/angelNumbers";
+import ResultShare from "../../../components/tools/ResultShare";
 
 export default function AngelNumberToolPage() {
   const [value, setValue] = useState("");
@@ -124,6 +125,16 @@ export default function AngelNumberToolPage() {
                 <p className="mt-2 leading-7 text-muted">{reading.guidance}</p>
               </div>
             </div>
+
+            <ResultShare
+              filename={`destinyra-angel-${reading.number}`}
+              shareText={`Angel number ${reading.number} — ${reading.title}. Decode yours on Destinyra ✨`}
+              eyebrow="Angel Number"
+              title={reading.title}
+              highlight={reading.number}
+              subtitle={reading.guidance}
+              accent="#0ea5e9"
+            />
 
             <p className="mt-6 text-center text-xs text-muted">
               Angel numbers are a tool for reflection — notice what the message

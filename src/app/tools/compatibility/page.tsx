@@ -8,6 +8,7 @@ import {
   calculateCompatibility,
   type CompatibilityResult,
 } from "../../../features/numerology/lib/calculateCompatibility";
+import ResultShare from "../../../components/tools/ResultShare";
 
 export default function CompatibilityToolPage() {
   const [nameA, setNameA] = useState("");
@@ -189,6 +190,20 @@ export default function CompatibilityToolPage() {
                 </ul>
               </div>
             </div>
+
+            <ResultShare
+              filename="destinyra-compatibility"
+              shareText={`${nameA || "Partner 1"} × ${nameB || "Partner 2"}: ${result.score}% match (${result.label}) on Destinyra 💞`}
+              eyebrow="Love Compatibility"
+              title={`${nameA || "Partner 1"} × ${nameB || "Partner 2"}`}
+              highlight={`${result.score}%`}
+              subtitle={result.label}
+              rows={[
+                { label: `Life Path ${result.aRoot}`, value: result.aTitle },
+                { label: `Life Path ${result.bRoot}`, value: result.bTitle },
+              ]}
+              accent="#f43f5e"
+            />
 
             <p className="mt-6 text-center text-xs text-muted">
               For entertainment and self-reflection — your connection is always

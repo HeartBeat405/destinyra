@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronRight, Layers, Sparkles, RotateCcw } from "lucide-react";
 
 import { tarotCards, type TarotCard } from "../../../features/tarot/data/tarotCards";
+import ResultShare from "../../../components/tools/ResultShare";
 
 type Position = { label: string; hint: string };
 
@@ -286,6 +287,20 @@ export default function TarotToolPage() {
                   </div>
                 );
               })()}
+
+            <ResultShare
+              filename="destinyra-tarot"
+              shareText={`My tarot reading (${SPREADS[count].title}): ${cards
+                .map((c) => c.name)
+                .join(", ")} 🔮 Drawn on Destinyra`}
+              eyebrow="Tarot Reading"
+              title={SPREADS[count].title}
+              rows={cards.map((c, idx) => ({
+                label: positions[idx].label,
+                value: c.name,
+              }))}
+              accent="#7c3aed"
+            />
 
             <p className="mt-6 text-center text-xs text-muted">
               The cards are a mirror for reflection, not a prediction. Take what
