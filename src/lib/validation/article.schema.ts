@@ -18,6 +18,10 @@ export const RELATED_TOOLS = [
   "compatibility",
 ] as const;
 
+// Hero/banner text color: "auto" picks white over an image and dark over
+// the gradient placeholder; "light"/"dark" force it.
+export const HERO_TEXT_COLORS = ["auto", "light", "dark"] as const;
+
 const optionalUrl = z
   .union([z.string().url(), z.literal("")])
   .optional()
@@ -43,6 +47,7 @@ export const ArticleInputSchema = z.object({
   editorsPick: z.boolean().optional().default(false),
   trending: z.boolean().optional().default(false),
   pinned: z.boolean().optional().default(false),
+  heroTextColor: z.enum(HERO_TEXT_COLORS).optional().default("auto"),
   seoTitle: z.string().max(70).optional().default(""),
   seoDescription: z.string().max(200).optional().default(""),
   focusKeyword: z.string().optional().default(""),

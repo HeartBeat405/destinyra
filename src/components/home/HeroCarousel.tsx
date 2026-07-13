@@ -63,6 +63,14 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
         {slides.map((a, idx) => {
           const active = idx === i;
           const hasImg = Boolean(a.image);
+          // White text unless the author forced dark, or (auto) there's no
+          // image — the gradient fallback is light, so dark text reads best.
+          const white =
+            a.heroTextColor === "light"
+              ? true
+              : a.heroTextColor === "dark"
+                ? false
+                : hasImg;
           return (
             <Link
               key={a.id}
@@ -82,11 +90,6 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
                     alt={a.title}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  {/* Scrim: heavy on the left (where the text sits), fading
-                      right so the image stays visible — keeps white text
-                      readable even over a light photo. */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/10" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </>
               ) : (
                 <div
@@ -94,21 +97,32 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
                 />
               )}
 
+              {/* Readability scrim, matched to the text color. Heavy on the
+                  left (where the text sits), fading over the image. */}
+              {white ? (
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </>
+              ) : hasImg ? (
+                <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/55 to-transparent" />
+              ) : null}
+
               {/* Content */}
               <div className="relative mx-auto flex h-full max-w-5xl flex-col justify-end px-6 pb-16 sm:pb-20">
                 <div
                   className={
-                    hasImg
+                    white
                       ? "text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.55)]"
-                      : "text-ink"
+                      : "text-ink [text-shadow:0_1px_10px_rgba(255,255,255,0.65)]"
                   }
                 >
                   {a.category && (
                     <span
                       className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                        hasImg
+                        white
                           ? "bg-white/20 text-white backdrop-blur"
-                          : "bg-brand-50 text-brand-700"
+                          : "bg-black/10 text-ink"
                       }`}
                     >
                       <Icon name={a.category.iconName} className="h-3.5 w-3.5" />
@@ -120,7 +134,7 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
                   </h1>
                   <p
                     className={`mt-4 max-w-2xl text-base leading-7 sm:text-lg ${
-                      hasImg ? "text-white/85" : "text-muted"
+                      white ? "text-white/85" : "text-muted"
                     }`}
                   >
                     {a.excerpt}

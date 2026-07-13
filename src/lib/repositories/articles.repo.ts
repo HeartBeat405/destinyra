@@ -65,6 +65,7 @@ function mapRow(row: any): Article {
     pinned: row.pinned ?? false,
     views: Number(row.views ?? 0),
     image: row.og_image_url ?? "",
+    heroTextColor: row.hero_text_color ?? "auto",
     iconName: row.icon_name ?? category?.iconName ?? "Sparkles",
     gradient: row.gradient ?? category?.gradient ?? "from-violet-600 to-purple-700",
     category,
@@ -104,12 +105,26 @@ function toRow(input: ArticleInput, nowIso: string) {
     editors_pick: input.editorsPick,
     trending: input.trending,
     pinned: input.pinned,
+    hero_text_color: input.heroTextColor || "auto",
     seo_title: input.seoTitle || null,
     seo_description: input.seoDescription || null,
     canonical_url: input.canonicalUrl || null,
     og_image_url: input.ogImageUrl || null,
     published_at: publishedAt,
   };
+}
+
+// Strip columns that may not be migrated yet, so a save still succeeds if
+// the DB is behind the code. Extend this list when adding new columns.
+const MAYBE_MISSING = ["hero_text_color"];
+function isMissingColumn(error: { message?: string } | null): boolean {
+  const m = error?.message ?? "";
+  return MAYBE_MISSING.some((c) => m.includes(c));
+}
+function stripMaybeMissing(row: Record<string, unknown>) {
+  const copy = { ...row };
+  for (const c of MAYBE_MISSING) delete copy[c];
+  return copy;
 }
 
 export const articlesRepo = {
@@ -194,11 +209,19 @@ export const articlesRepo = {
   async create(input: ArticleInput, nowIso: string): Promise<Article | null> {
     if (!isSupabaseConfigured) return null;
     const db = await createServerSupabase();
-    const { data, error } = await db
+    const row = toRow(input, nowIso);
+    let { data, error } = await db
       .from("articles")
-      .insert(toRow(input, nowIso))
+      .insert(row)
       .select(SELECT)
       .single();
+    if (error && isMissingColumn(error)) {
+      ({ data, error } = await db
+        .from("articles")
+        .insert(stripMaybeMissing(row))
+        .select(SELECT)
+        .single());
+    }
     if (error || !data) return null;
     return mapRow(data);
   },
@@ -210,12 +233,21 @@ export const articlesRepo = {
   ): Promise<Article | null> {
     if (!isSupabaseConfigured) return null;
     const db = await createServerSupabase();
-    const { data, error } = await db
+    const row = toRow(input, nowIso);
+    let { data, error } = await db
       .from("articles")
-      .update(toRow(input, nowIso))
+      .update(row)
       .eq("id", id)
       .select(SELECT)
       .single();
+    if (error && isMissingColumn(error)) {
+      ({ data, error } = await db
+        .from("articles")
+        .update(stripMaybeMissing(row))
+        .eq("id", id)
+        .select(SELECT)
+        .single());
+    }
     if (error || !data) return null;
     return mapRow(data);
   },
@@ -298,6 +330,7 @@ export const articlesRepo = {
       editorsPick: false,
       trending: false,
       pinned: false,
+      heroTextColor: original.heroTextColor ?? "auto",
       seoTitle: original.seoTitle ?? "",
       seoDescription: original.seoDescription ?? "",
       focusKeyword: "",

@@ -90,6 +90,8 @@ export type Article = {
   views: number;
   /** Banner / cover image URL (also used for social sharing). Empty = use placeholder tile. */
   image?: string;
+  /** Hero/banner text color: "auto" | "light" | "dark". */
+  heroTextColor?: "auto" | "light" | "dark";
   /** lucide icon name for the thumbnail glyph (fallback when no image) */
   iconName: string;
   /** Tailwind gradient classes for the thumbnail (fallback when no image) */

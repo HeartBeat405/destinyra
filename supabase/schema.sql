@@ -219,6 +219,7 @@ create table if not exists public.articles (
   editors_pick    boolean not null default false,
   trending        boolean not null default false,
   pinned          boolean not null default false,
+  hero_text_color text default 'auto',     -- auto | light | dark (banner title color)
   related_tool    text default 'none',     -- tool slug or 'none'
   seo_title       text,
   seo_description text,

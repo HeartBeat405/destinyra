@@ -89,11 +89,14 @@ function toInput(a?: Article): ArticleInput {
     editorsPick: !!a?.editorsPick,
     trending: !!a?.trending,
     pinned: !!a?.pinned,
+    heroTextColor: a?.heroTextColor ?? "auto",
     seoTitle: a?.seoTitle ?? "",
     seoDescription: a?.seoDescription ?? "",
     focusKeyword: "",
     canonicalUrl: "",
-    ogImageUrl: "",
+    // Loaded from the article's stored banner so editing/autosave never
+    // wipes it (Article.image maps from og_image_url).
+    ogImageUrl: a?.image ?? "",
     scheduledAt: null,
   };
 }
@@ -823,6 +826,33 @@ export default function ArticleEditor({
               image.
             </p>
             <div className={`mt-2 h-16 rounded-xl bg-gradient-to-br ${form.gradient}`} />
+
+            <Field label="Banner text color">
+              <div className="flex gap-1.5">
+                {(["auto", "light", "dark"] as const).map((c) => {
+                  const active = (form.heroTextColor ?? "auto") === c;
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => set("heroTextColor", c)}
+                      className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold capitalize transition ${
+                        active
+                          ? "bg-white/15 text-white ring-1 ring-white/30"
+                          : "bg-white/[0.03] text-gray-400 hover:bg-white/10"
+                      }`}
+                    >
+                      {c === "auto" ? "Auto" : c === "light" ? "Light" : "Dark"}
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+            <p className="mt-1 text-[11px] text-gray-500">
+              Color of the title over the homepage banner. <strong>Auto</strong>{" "}
+              = white on a photo. Pick <strong>Dark</strong> if your banner is
+              light and white text is hard to read.
+            </p>
           </div>
         </div>
       </div>
