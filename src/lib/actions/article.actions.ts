@@ -28,6 +28,7 @@ async function authorize(action: Action) {
 function revalidateArticle(slug?: string) {
   revalidatePath("/admin/articles");
   revalidatePath("/admin");
+  revalidatePath("/"); // homepage hero + featured/trending/latest cards
   revalidatePath("/articles");
   if (slug) revalidatePath(`/articles/${slug}`);
 }
