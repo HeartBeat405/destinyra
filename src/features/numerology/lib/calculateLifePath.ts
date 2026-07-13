@@ -41,11 +41,12 @@ export function calculateLifePath(
       masterNumber = Number(day);
     }
   
-    // CHECK MONTH
+    // CHECK MONTH (only if the day didn't already yield a master number)
     if (
-      Number(month) === 11 ||
-      Number(month) === 22 ||
-      Number(month) === 33
+      masterNumber === null &&
+      (Number(month) === 11 ||
+        Number(month) === 22 ||
+        Number(month) === 33)
     ) {
       masterNumber = Number(month);
     }

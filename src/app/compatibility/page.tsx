@@ -1,7 +1,6 @@
-export default function CompatibilityPage() {
-    return (
-      <main className="min-h-screen flex items-center justify-center text-white">
-        Compatibility Feature Coming Soon ✨
-      </main>
-    );
-  }
+import { redirect } from "next/navigation";
+
+// Moved under /tools. Keep old links working.
+export default function CompatibilityRedirect() {
+  redirect("/tools/compatibility");
+}
