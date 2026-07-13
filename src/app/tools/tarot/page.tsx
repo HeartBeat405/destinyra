@@ -49,6 +49,38 @@ function drawCards(n: number): TarotCard[] {
   return deck.slice(0, n);
 }
 
+// Connective phrasing per position, so the combined reading flows as one
+// story instead of a list.
+const CONNECTORS: Record<number, string[]> = {
+  1: ["The card for you is"],
+  3: [
+    "What shaped this moment carries the energy of",
+    "Right now you stand with",
+    "And the road ahead is lit by",
+  ],
+  5: [
+    "At the heart of it sits",
+    "The friction comes from",
+    "Its deeper root is",
+    "Your wisest move mirrors",
+    "and it all points toward",
+  ],
+};
+
+// Weave every drawn card into a single combined interpretation.
+function buildSynthesis(cards: TarotCard[]): { lines: string[]; closing: string } {
+  const conns = CONNECTORS[cards.length] ?? cards.map(() => "You also draw");
+  const kw = (c: TarotCard) => c.keywords.map((k) => k.toLowerCase()).join(", ");
+  const lines = cards.map((c, i) => `${conns[i]} ${c.name} (${kw(c)}).`);
+  const first = cards[0].keywords[0].toLowerCase();
+  const last = cards[cards.length - 1].keywords[0].toLowerCase();
+  const closing =
+    cards.length > 1
+      ? `Read as one story, your cards move from ${first} toward ${last}. ${cards[cards.length - 1].guidance}`
+      : cards[0].guidance;
+  return { lines, closing };
+}
+
 export default function TarotToolPage() {
   const [question, setQuestion] = useState("");
   const [count, setCount] = useState<number>(1);
@@ -233,6 +265,27 @@ export default function TarotToolPage() {
                 );
               })}
             </div>
+
+            {cards.length > 1 &&
+              (() => {
+                const synth = buildSynthesis(cards);
+                return (
+                  <div className="mt-6 rounded-2xl border border-brand/20 bg-brand-50 p-6">
+                    <p className="flex items-center gap-2 text-sm font-bold text-brand-700">
+                      <Sparkles className="h-4 w-4" />
+                      The reading, together
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-sm leading-6 text-ink">
+                      {synth.lines.map((l, i) => (
+                        <p key={i}>{l}</p>
+                      ))}
+                    </div>
+                    <p className="mt-3 border-t border-brand/15 pt-3 text-sm leading-7 text-ink">
+                      {synth.closing}
+                    </p>
+                  </div>
+                );
+              })()}
 
             <p className="mt-6 text-center text-xs text-muted">
               The cards are a mirror for reflection, not a prediction. Take what
