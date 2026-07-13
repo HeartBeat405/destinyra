@@ -1,8 +1,15 @@
 import type { Media, MediaType } from "../types";
-import { isSupabaseConfigured } from "../supabase";
+import { isSupabaseConfigured, createAdminClient } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 
 const BUCKET = "media";
+
+// Writes to the `media` table/bucket go through the service-role client:
+// media operations are already RBAC-gated in the action layer, and the
+// table has no staff write RLS policy. Falls back to the session client.
+async function writeDb() {
+  return createAdminClient() ?? (await createServerSupabase());
+}
 
 function mapRow(r: any): Media {
   return {
@@ -75,7 +82,7 @@ export const mediaRepo = {
     contentType: string
   ): Promise<boolean> {
     if (!isSupabaseConfigured) return false;
-    const db = await createServerSupabase();
+    const db = await writeDb();
     const { error } = await db.storage
       .from(BUCKET)
       .upload(path, file, { contentType, upsert: false });
@@ -84,7 +91,7 @@ export const mediaRepo = {
 
   async removeObject(path: string): Promise<void> {
     if (!isSupabaseConfigured || !path) return;
-    const db = await createServerSupabase();
+    const db = await writeDb();
     await db.storage.from(BUCKET).remove([path]);
   },
 
@@ -97,7 +104,7 @@ export const mediaRepo = {
   // --- Table row operations ---
   async create(input: NewMedia): Promise<Media | null> {
     if (!isSupabaseConfigured) return null;
-    const db = await createServerSupabase();
+    const db = await writeDb();
     const { data, error } = await db
       .from("media")
       .insert({
@@ -123,7 +130,7 @@ export const mediaRepo = {
     patch: Partial<Pick<Media, "name" | "alt" | "caption" | "folder">>
   ): Promise<boolean> {
     if (!isSupabaseConfigured) return false;
-    const db = await createServerSupabase();
+    const db = await writeDb();
     const { error } = await db.from("media").update(patch).eq("id", id);
     return !error;
   },
@@ -131,7 +138,7 @@ export const mediaRepo = {
   async remove(id: string): Promise<boolean> {
     if (!isSupabaseConfigured) return false;
     const target = await this.findById(id);
-    const db = await createServerSupabase();
+    const db = await writeDb();
     if (target?.storagePath) await this.removeObject(target.storagePath);
     const { error } = await db.from("media").delete().eq("id", id);
     return !error;

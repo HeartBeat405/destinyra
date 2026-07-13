@@ -487,6 +487,9 @@ drop policy if exists "public read pages" on public.pages;
 create policy "public read pages" on public.pages for select using (true);
 drop policy if exists "public read media" on public.media;
 create policy "public read media" on public.media for select using (true);
+drop policy if exists "staff write media" on public.media;
+create policy "staff write media" on public.media
+  for all using (public.is_staff()) with check (public.is_staff());
 
 -- Comments: anyone can read approved; members write their own ---
 drop policy if exists "read approved comments" on public.comments;
