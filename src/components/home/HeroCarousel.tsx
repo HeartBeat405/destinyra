@@ -82,7 +82,11 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
                     alt={a.title}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
+                  {/* Scrim: heavy on the left (where the text sits), fading
+                      right so the image stays visible — keeps white text
+                      readable even over a light photo. */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </>
               ) : (
                 <div
@@ -92,7 +96,13 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
 
               {/* Content */}
               <div className="relative mx-auto flex h-full max-w-5xl flex-col justify-end px-6 pb-16 sm:pb-20">
-                <div className={hasImg ? "text-white" : "text-ink"}>
+                <div
+                  className={
+                    hasImg
+                      ? "text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.55)]"
+                      : "text-ink"
+                  }
+                >
                   {a.category && (
                     <span
                       className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
