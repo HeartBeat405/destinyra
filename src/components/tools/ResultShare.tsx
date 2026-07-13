@@ -19,6 +19,12 @@ export type ResultShareProps = {
   highlight?: string;
   subtitle?: string;
   rows?: PosterRow[];
+  /** Small pill under the highlight (e.g. "Master Number 11"). */
+  badge?: string;
+  /** Italic quote line. */
+  quote?: string;
+  /** Pill tags (e.g. strengths / keywords). */
+  chips?: string[];
   /** Accent hex color for the poster. */
   accent?: string;
 };
@@ -34,6 +40,9 @@ export default function ResultShare({
   highlight,
   subtitle,
   rows = [],
+  badge,
+  quote,
+  chips = [],
   accent = "#6C63FF",
 }: ResultShareProps) {
   const posterRef = useRef<HTMLDivElement>(null);
@@ -225,6 +234,23 @@ export default function ResultShare({
                 {highlight}
               </div>
             ) : null}
+            {badge ? (
+              <div
+                style={{
+                  display: "inline-block",
+                  marginTop: "28px",
+                  padding: "14px 40px",
+                  borderRadius: "999px",
+                  background: "#FEF3C7",
+                  color: "#92400E",
+                  fontFamily: "Inter, sans-serif",
+                  fontSize: "32px",
+                  fontWeight: 700,
+                }}
+              >
+                {badge}
+              </div>
+            ) : null}
             {subtitle ? (
               <div
                 style={{
@@ -236,6 +262,22 @@ export default function ResultShare({
                 }}
               >
                 {subtitle}
+              </div>
+            ) : null}
+            {quote ? (
+              <div
+                style={{
+                  marginTop: "44px",
+                  maxWidth: "820px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  fontSize: "42px",
+                  lineHeight: 1.6,
+                  fontStyle: "italic",
+                  color: "#2A3242",
+                }}
+              >
+                “{quote}”
               </div>
             ) : null}
 
@@ -276,6 +318,35 @@ export default function ResultShare({
                     >
                       {r.value}
                     </span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {chips.length > 0 ? (
+              <div
+                style={{
+                  marginTop: "52px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "20px",
+                }}
+              >
+                {chips.map((c, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      fontFamily: "Inter, sans-serif",
+                      padding: "16px 34px",
+                      borderRadius: "999px",
+                      background: "#F1F0FE",
+                      color: "#4a42d4",
+                      fontSize: "30px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {c}
                   </div>
                 ))}
               </div>
