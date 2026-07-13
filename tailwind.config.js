@@ -1,6 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  // Gradient classes are stored in the DB (article/category/tool colors),
+  // so they don't appear literally in the source for the JIT to find.
+  // Safelist the preset palette so any chosen gradient always renders.
+  safelist: [
+    "from-violet-600", "to-purple-700",
+    "from-rose-500", "to-pink-600",
+    "from-blue-500", "to-indigo-600",
+    "from-emerald-500", "to-teal-500",
+    "from-amber-500", "to-orange-600",
+    "from-cyan-500", "to-sky-600",
+    "from-fuchsia-500", "to-purple-600",
+    "from-purple-600", "to-fuchsia-600",
+    "from-slate-500", "to-gray-600",
+  ],
   theme: {
     extend: {
       colors: {

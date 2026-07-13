@@ -58,6 +58,19 @@ type Props = {
 
 type SaveState = "idle" | "saving" | "saved" | "error" | "dev";
 
+// Preset accent gradients. Values are safelisted in tailwind.config.js so
+// they always render even though they're stored in the database.
+const GRADIENT_PRESETS: { label: string; value: string }[] = [
+  { label: "Purple", value: "from-violet-600 to-purple-700" },
+  { label: "Pink", value: "from-rose-500 to-pink-600" },
+  { label: "Blue", value: "from-blue-500 to-indigo-600" },
+  { label: "Green", value: "from-emerald-500 to-teal-500" },
+  { label: "Amber", value: "from-amber-500 to-orange-600" },
+  { label: "Cyan", value: "from-cyan-500 to-sky-600" },
+  { label: "Fuchsia", value: "from-fuchsia-500 to-purple-600" },
+  { label: "Slate", value: "from-slate-500 to-gray-600" },
+];
+
 function toInput(a?: Article): ArticleInput {
   return {
     id: a?.id,
@@ -784,14 +797,28 @@ export default function ArticleEditor({
                 placeholder="Sparkles"
               />
             </Field>
-            <Field label="Gradient (tailwind)">
-              <input
-                value={form.gradient}
-                onChange={(e) => set("gradient", e.target.value)}
-                className="editor-input"
-                placeholder="from-violet-600 to-purple-700"
-              />
+            <Field label="Gradient / accent color">
+              <div className="flex flex-wrap gap-2">
+                {GRADIENT_PRESETS.map((g) => {
+                  const active = form.gradient === g.value;
+                  return (
+                    <button
+                      key={g.value}
+                      type="button"
+                      title={g.label}
+                      onClick={() => set("gradient", g.value)}
+                      className={`h-8 w-8 rounded-lg bg-gradient-to-br ${g.value} ring-2 ring-offset-2 ring-offset-[#0b0b18] transition ${
+                        active ? "ring-white" : "ring-transparent hover:ring-white/40"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
             </Field>
+            <p className="mt-2 text-[11px] text-gray-500">
+              Used as the fallback tile color when this article has no banner
+              image.
+            </p>
             <div className={`mt-2 h-16 rounded-xl bg-gradient-to-br ${form.gradient}`} />
           </div>
         </div>
