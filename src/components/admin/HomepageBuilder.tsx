@@ -17,7 +17,7 @@ import type { HomepageWidget, WidgetType } from "../../lib/types";
 import { WIDGET_META, ADDABLE_WIDGET_TYPES } from "../../data/homepage";
 import { saveHomepageWidgetsAction } from "../../lib/actions/homepage.actions";
 
-const NON_CONFIGURABLE: WidgetType[] = ["hero", "newsletter"];
+const NON_CONFIGURABLE: WidgetType[] = ["newsletter"];
 
 export default function HomepageBuilder({
   initialWidgets,
