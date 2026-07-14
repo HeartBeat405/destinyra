@@ -9,6 +9,7 @@ export const WIDGET_TYPES = [
   "popular",
   "categories",
   "tools",
+  "news",
   "newsletter",
   "advertisement",
   "quote",

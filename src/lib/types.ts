@@ -270,6 +270,7 @@ export type WidgetType =
   | "popular"
   | "categories"
   | "tools"
+  | "news"
   | "newsletter"
   | "advertisement"
   | "quote"

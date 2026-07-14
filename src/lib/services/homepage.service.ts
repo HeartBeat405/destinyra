@@ -1,8 +1,9 @@
-import type { Article, Tool } from "../types";
+import type { Article, Tool, NewsItem } from "../types";
 import type { CategoryWithCount } from "./category.service";
 import { articlesRepo } from "../repositories/articles.repo";
 import { categoriesRepo } from "../repositories/categories.repo";
 import { toolsRepo } from "../repositories/tools.repo";
+import { newsService } from "./news.service";
 
 export type HomepageSections = {
   hero: Article | null;
@@ -12,16 +13,18 @@ export type HomepageSections = {
   popular: Article[];
   categories: CategoryWithCount[];
   tools: Tool[];
+  news: NewsItem[];
 };
 
 // Single source of truth for the homepage. Fetches the article pool ONCE
 // and derives every section in-memory — one round trip instead of many.
 export const homepageService = {
   async getSections(): Promise<HomepageSections> {
-    const [pool, allCats, tools] = await Promise.all([
+    const [pool, allCats, tools, news] = await Promise.all([
       articlesRepo.findPublished(60),
       categoriesRepo.findAll(),
       toolsRepo.findAll(),
+      newsService.getLatest(8),
     ]);
 
     const editorsPick = pool.find((a) => a.editorsPick) ?? null;
@@ -55,6 +58,7 @@ export const homepageService = {
       popular,
       categories,
       tools,
+      news,
     };
   },
 };

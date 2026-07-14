@@ -6,6 +6,7 @@ import type { HomepageSections } from "../../lib/services/homepage.service";
 import HeroCarousel from "./HeroCarousel";
 import FeaturedCard from "../articles/FeaturedCard";
 import ArticleCard from "../articles/ArticleCard";
+import NewsCard from "../news/NewsCard";
 import CategoryCard from "../categories/CategoryCard";
 import ToolCard from "../tools/ToolCard";
 import SectionHeading from "../ui/SectionHeading";
@@ -108,6 +109,18 @@ export default function WidgetRenderer({ widget, sections }: Props) {
           <Grid cols={3}>
             {sections.tools.slice(0, max ?? 3).map((t) => (
               <ToolCard key={t.id} tool={t} />
+            ))}
+          </Grid>
+        </Wrap>
+      );
+
+    case "news":
+      if (sections.news.length === 0) return null;
+      return (
+        <Wrap widget={widget} defaultTitle="Latest News" hrefAll="/news">
+          <Grid>
+            {sections.news.slice(0, max ?? 4).map((n) => (
+              <NewsCard key={n.id} item={n} />
             ))}
           </Grid>
         </Wrap>
