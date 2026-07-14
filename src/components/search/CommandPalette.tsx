@@ -13,6 +13,14 @@ import {
   type SearchResults,
 } from "../../lib/search-types";
 
+// Shown before the user starts typing.
+const QUICK_LINKS = [
+  { title: "Articles", href: "/articles", icon: "FileText" },
+  { title: "Latest News", href: "/news", icon: "Newspaper" },
+  { title: "Categories", href: "/categories", icon: "FolderTree" },
+  { title: "Tools", href: "/tools", icon: "Wrench" },
+];
+
 // Global command palette (Ctrl/Cmd + K). Instant, keyboard-accessible.
 export default function CommandPalette() {
   const router = useRouter();
@@ -135,6 +143,7 @@ export default function CommandPalette() {
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onInputKey}
             placeholder="Search articles, categories, tools…"
+            style={{ outline: "none", boxShadow: "none" }}
             className="w-full bg-transparent py-4 text-[15px] text-ink outline-none placeholder:text-muted"
             role="combobox"
             aria-expanded={count > 0}
@@ -149,9 +158,29 @@ export default function CommandPalette() {
         {/* Results */}
         <div id="cmdk-list" role="listbox" className="max-h-[60vh] overflow-y-auto p-2">
           {q.trim().length < 2 ? (
-            <p className="px-3 py-10 text-center text-sm text-muted">
-              Type at least 2 characters to search.
-            </p>
+            <div>
+              <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted">
+                Quick links
+              </p>
+              {QUICK_LINKS.map((l) => (
+                <button
+                  key={l.href}
+                  onClick={() => {
+                    setOpen(false);
+                    router.push(l.href);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-canvas"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-canvas text-brand">
+                    <Icon name={l.icon} className="h-4 w-4" />
+                  </span>
+                  <span className="text-sm font-medium text-ink">{l.title}</span>
+                </button>
+              ))}
+              <p className="px-3 pb-2 pt-3 text-center text-xs text-muted">
+                Type at least 2 characters to search…
+              </p>
+            </div>
           ) : count === 0 && !loading ? (
             <p className="px-3 py-10 text-center text-sm text-muted">
               No results for “{q.trim()}”.
