@@ -279,6 +279,23 @@ create table if not exists public.newsletter (
 );
 
 -- ------------------------------------------------------------
+-- NEWS  (aggregated headlines — snippet + image + link to source)
+-- ------------------------------------------------------------
+create table if not exists public.news (
+  id           uuid primary key default gen_random_uuid(),
+  title        text not null,
+  excerpt      text,
+  url          text not null unique,
+  image_url    text,
+  source_name  text,
+  source_url   text,
+  category     text default 'news',
+  published_at timestamptz,
+  created_at   timestamptz not null default now()
+);
+create index if not exists idx_news_published on public.news (published_at desc);
+
+-- ------------------------------------------------------------
 -- COMMENTS  (threaded; future-facing)
 -- ------------------------------------------------------------
 create table if not exists public.comments (
@@ -448,6 +465,7 @@ alter table public.article_tags    enable row level security;
 alter table public.related_articles enable row level security;
 alter table public.pages           enable row level security;
 alter table public.newsletter      enable row level security;
+alter table public.news            enable row level security;
 alter table public.comments        enable row level security;
 alter table public.bookmarks       enable row level security;
 alter table public.reading_history enable row level security;
@@ -491,6 +509,8 @@ create policy "public read media" on public.media for select using (true);
 drop policy if exists "staff write media" on public.media;
 create policy "staff write media" on public.media
   for all using (public.is_staff()) with check (public.is_staff());
+drop policy if exists "public read news" on public.news;
+create policy "public read news" on public.news for select using (true);
 
 -- Comments: anyone can read approved; members write their own ---
 drop policy if exists "read approved comments" on public.comments;

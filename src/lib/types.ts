@@ -141,6 +141,19 @@ export type Tool = {
   archived?: boolean;
 };
 
+// Aggregated external news headline (snippet + image + link to source).
+export type NewsItem = {
+  id: string;
+  title: string;
+  excerpt: string;
+  url: string;
+  imageUrl: string;
+  sourceName: string;
+  sourceUrl?: string;
+  category: string;
+  publishedAt: string;
+};
+
 // ------------------------------------------------------------
 // Media Library
 // ------------------------------------------------------------

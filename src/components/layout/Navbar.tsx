@@ -9,6 +9,7 @@ import SearchButton from "../search/SearchButton";
 
 const links = [
   { label: "Home", href: "/" },
+  { label: "News", href: "/news" },
   { label: "Articles", href: "/articles" },
   { label: "Categories", href: "/categories" },
   { label: "Tools", href: "/tools" },
