@@ -141,6 +141,15 @@ export type Tool = {
   archived?: boolean;
 };
 
+// Public review / testimonial.
+export type Review = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+};
+
 // Aggregated external news headline (snippet + image + link to source).
 export type NewsItem = {
   id: string;

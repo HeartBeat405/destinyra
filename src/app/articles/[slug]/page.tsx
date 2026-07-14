@@ -26,7 +26,7 @@ import ReadingProgress from "../../../components/articles/ReadingProgress";
 import ViewTracker from "../../../components/articles/ViewTracker";
 import TableOfContents from "../../../components/articles/TableOfContents";
 import BackToTop from "../../../components/articles/BackToTop";
-import Newsletter from "../../../components/ui/Newsletter";
+import Reviews from "../../../components/ui/Reviews";
 import Icon from "../../../components/ui/Icon";
 import AdSlotRenderer from "../../../components/ads/AdSlotRenderer";
 
@@ -248,7 +248,7 @@ export default async function ArticlePage({ params }: Params) {
           <AdSlotRenderer placement="article-bottom" />
         </div>
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <Newsletter />
+          <Reviews />
         </div>
       </article>
 

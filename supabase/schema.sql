@@ -296,6 +296,19 @@ create table if not exists public.news (
 create index if not exists idx_news_published on public.news (published_at desc);
 
 -- ------------------------------------------------------------
+-- REVIEWS  (public testimonials: name + rating + comment)
+-- ------------------------------------------------------------
+create table if not exists public.reviews (
+  id         uuid primary key default gen_random_uuid(),
+  name       text not null,
+  rating     int not null check (rating between 1 and 5),
+  comment    text not null,
+  approved   boolean not null default true,
+  created_at timestamptz not null default now()
+);
+create index if not exists idx_reviews_created on public.reviews (created_at desc);
+
+-- ------------------------------------------------------------
 -- COMMENTS  (threaded; future-facing)
 -- ------------------------------------------------------------
 create table if not exists public.comments (
@@ -466,6 +479,7 @@ alter table public.related_articles enable row level security;
 alter table public.pages           enable row level security;
 alter table public.newsletter      enable row level security;
 alter table public.news            enable row level security;
+alter table public.reviews         enable row level security;
 alter table public.comments        enable row level security;
 alter table public.bookmarks       enable row level security;
 alter table public.reading_history enable row level security;
@@ -511,6 +525,8 @@ create policy "staff write media" on public.media
   for all using (public.is_staff()) with check (public.is_staff());
 drop policy if exists "public read news" on public.news;
 create policy "public read news" on public.news for select using (true);
+drop policy if exists "public read reviews" on public.reviews;
+create policy "public read reviews" on public.reviews for select using (approved);
 
 -- Comments: anyone can read approved; members write their own ---
 drop policy if exists "read approved comments" on public.comments;

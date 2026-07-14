@@ -4,7 +4,7 @@ import Link from "next/link";
 import { articleService } from "../../lib/services/article.service";
 import { categoryService } from "../../lib/services/category.service";
 import ArticleCard from "../../components/articles/ArticleCard";
-import Newsletter from "../../components/ui/Newsletter";
+import Reviews from "../../components/ui/Reviews";
 import Icon from "../../components/ui/Icon";
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ export default async function ArticlesPage() {
       </div>
 
       <div className="mt-20">
-        <Newsletter />
+        <Reviews />
       </div>
     </main>
   );

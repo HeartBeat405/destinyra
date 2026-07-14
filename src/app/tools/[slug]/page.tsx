@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ChevronRight, Bell } from "lucide-react";
 
 import { toolService } from "../../../lib/services/tool.service";
-import Newsletter from "../../../components/ui/Newsletter";
+import Reviews from "../../../components/ui/Reviews";
 import Icon from "../../../components/ui/Icon";
 import AdSlotRenderer from "../../../components/ads/AdSlotRenderer";
 
@@ -78,7 +78,7 @@ export default async function ToolPage({ params }: Params) {
       <AdSlotRenderer placement="tool" />
 
       <div className="mt-10">
-        <Newsletter />
+        <Reviews />
       </div>
 
       <div className="mt-10 text-center">

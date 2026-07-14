@@ -10,7 +10,7 @@ import NewsCard from "../news/NewsCard";
 import CategoryCard from "../categories/CategoryCard";
 import ToolCard from "../tools/ToolCard";
 import SectionHeading from "../ui/SectionHeading";
-import Newsletter from "../ui/Newsletter";
+import Reviews from "../ui/Reviews";
 
 type Props = {
   widget: HomepageWidget;
@@ -169,7 +169,7 @@ export default function WidgetRenderer({ widget, sections }: Props) {
     case "newsletter":
       return (
         <Section widget={widget}>
-          <Newsletter />
+          <Reviews />
         </Section>
       );
 

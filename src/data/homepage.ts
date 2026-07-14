@@ -82,7 +82,7 @@ export const WIDGET_META: Record<
   categories: { label: "Popular Categories", description: "Category cards", configurable: true },
   tools: { label: "Tools", description: "Interactive tool cards", configurable: true },
   news: { label: "Latest News", description: "Fresh aggregated headlines", configurable: true },
-  newsletter: { label: "Newsletter", description: "Email signup block", configurable: false },
+  newsletter: { label: "Reviews", description: "Visitor reviews + submit form", configurable: false },
   advertisement: { label: "Advertisement", description: "Ad slot placeholder", configurable: true },
   quote: { label: "Quote", description: "A featured quote", configurable: true },
   banner: { label: "Custom Banner", description: "CTA banner with link", configurable: true },
