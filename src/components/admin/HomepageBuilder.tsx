@@ -163,6 +163,30 @@ export default function HomepageBuilder({
                       placeholder="Subtitle"
                       className="editor-input"
                     />
+                    {w.type === "hero" && (
+                      <select
+                        value={w.source ?? "latest"}
+                        onChange={(e) =>
+                          update(w.id, {
+                            source: e.target.value as HomepageWidget["source"],
+                          })
+                        }
+                        className="editor-input sm:col-span-2"
+                      >
+                        <option value="latest" className="bg-[#0b0b18]">
+                          Source: Article banners — Latest
+                        </option>
+                        <option value="featured" className="bg-[#0b0b18]">
+                          Source: Article banners — Featured
+                        </option>
+                        <option value="trending" className="bg-[#0b0b18]">
+                          Source: Article banners — Trending
+                        </option>
+                        <option value="news" className="bg-[#0b0b18]">
+                          Source: News headlines
+                        </option>
+                      </select>
+                    )}
                     {w.type === "quote" && (
                       <>
                         <input

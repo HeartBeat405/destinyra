@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { TrendingUp, ArrowRight } from "lucide-react";
-import type { HomepageWidget } from "../../lib/types";
+import type { HomepageWidget, Article } from "../../lib/types";
 import type { HomepageSections } from "../../lib/services/homepage.service";
 
-import HeroCarousel from "./HeroCarousel";
+import HeroCarousel, { type HeroSlide } from "./HeroCarousel";
 import FeaturedCard from "../articles/FeaturedCard";
 import ArticleCard from "../articles/ArticleCard";
 import NewsCard from "../news/NewsCard";
@@ -22,8 +22,48 @@ export default function WidgetRenderer({ widget, sections }: Props) {
   const max = widget.maxItems;
 
   switch (widget.type) {
-    case "hero":
-      return <HeroCarousel articles={sections.latest} />;
+    case "hero": {
+      const source = widget.source ?? "latest";
+      const limit = widget.maxItems ?? 5;
+      let heroSlides: HeroSlide[];
+      if (source === "news") {
+        if (sections.news.length === 0) return null;
+        heroSlides = sections.news.slice(0, limit).map((n) => ({
+          id: n.id,
+          title: n.title,
+          excerpt: n.excerpt,
+          image: n.imageUrl || undefined,
+          href: n.url,
+          external: true,
+          categoryName: n.sourceName,
+          categoryIcon: "Newspaper",
+          textColor: "auto",
+          cta: "Read at source",
+        }));
+      } else {
+        const pool =
+          source === "featured"
+            ? ([sections.hero, ...sections.secondaryFeatured].filter(
+                Boolean
+              ) as Article[])
+            : source === "trending"
+              ? sections.trending
+              : sections.latest;
+        heroSlides = pool.slice(0, limit).map((a) => ({
+          id: a.id,
+          title: a.title,
+          excerpt: a.excerpt,
+          image: a.image || undefined,
+          href: `/articles/${a.slug}`,
+          external: false,
+          categoryName: a.category?.name,
+          categoryIcon: a.category?.iconName,
+          textColor: a.heroTextColor ?? "auto",
+          cta: "Read article",
+        }));
+      }
+      return <HeroCarousel slides={heroSlides} />;
+    }
 
     case "featured":
     case "editors-choice": {

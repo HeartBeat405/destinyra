@@ -297,4 +297,6 @@ export type HomepageWidget = {
   bannerCtaLabel?: string;
   bannerHref?: string;
   adSlot?: string;
+  // Hero source: which content the hero carousel showcases.
+  source?: "latest" | "featured" | "trending" | "news";
 };

@@ -3,11 +3,24 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import type { Article } from "../../lib/types";
 import Icon from "../ui/Icon";
 import { ButtonLink } from "../ui/Button";
 
-// Bright, light gradient backdrops used when an article has no banner image.
+// Normalized slide — works for articles (internal link) or news (external).
+export type HeroSlide = {
+  id: string;
+  title: string;
+  excerpt: string;
+  image?: string;
+  href: string;
+  external?: boolean;
+  categoryName?: string;
+  categoryIcon?: string; // lucide icon name
+  textColor?: "auto" | "light" | "dark";
+  cta?: string;
+};
+
+// Bright, light gradient backdrops used when a slide has no banner image.
 const BRIGHT = [
   "from-amber-100 via-white to-emerald-100",
   "from-emerald-100 via-white to-sky-100",
@@ -16,11 +29,48 @@ const BRIGHT = [
   "from-sky-100 via-white to-violet-100",
 ];
 
-// Homepage hero: an auto-rotating showcase of the latest articles. Each
-// slide uses the article's banner image (or a bright gradient fallback) and
-// links to the article. Falls back to a simple intro when there are none.
-export default function HeroCarousel({ articles }: { articles: Article[] }) {
-  const slides = articles.slice(0, 5);
+function SlideLink({
+  slide,
+  className,
+  active,
+  children,
+}: {
+  slide: HeroSlide;
+  className: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  if (slide.external) {
+    return (
+      <a
+        href={slide.href}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        aria-hidden={!active}
+        tabIndex={active ? 0 : -1}
+        className={className}
+      >
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link
+      href={slide.href}
+      aria-hidden={!active}
+      tabIndex={active ? 0 : -1}
+      className={className}
+    >
+      {children}
+    </Link>
+  );
+}
+
+// Auto-rotating hero. Fed a normalized list of slides, so one instance can
+// showcase articles and another can showcase news. Falls back to a simple
+// intro only when there are no slides at all.
+export default function HeroCarousel({ slides: input }: { slides: HeroSlide[] }) {
+  const slides = input.slice(0, 5);
   const [i, setI] = useState(0);
 
   useEffect(() => {
@@ -29,7 +79,6 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
     return () => clearInterval(t);
   }, [slides.length]);
 
-  // No articles yet → clean intro hero.
   if (slides.length === 0) {
     return (
       <section className="border-b border-line bg-gradient-to-br from-amber-50 via-white to-emerald-50">
@@ -60,45 +109,39 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
   return (
     <section className="relative border-b border-line">
       <div className="relative h-[440px] overflow-hidden sm:h-[520px]">
-        {slides.map((a, idx) => {
+        {slides.map((s, idx) => {
           const active = idx === i;
-          const hasImg = Boolean(a.image);
-          // White text unless the author forced dark, or (auto) there's no
-          // image — the gradient fallback is light, so dark text reads best.
+          const hasImg = Boolean(s.image);
           const white =
-            a.heroTextColor === "light"
+            s.textColor === "light"
               ? true
-              : a.heroTextColor === "dark"
+              : s.textColor === "dark"
                 ? false
                 : hasImg;
           return (
-            <Link
-              key={a.id}
-              href={`/articles/${a.slug}`}
-              aria-hidden={!active}
-              tabIndex={active ? 0 : -1}
+            <SlideLink
+              key={s.id}
+              slide={s}
+              active={active}
               className={`absolute inset-0 transition-opacity duration-700 ease-out ${
                 active ? "opacity-100" : "pointer-events-none opacity-0"
               }`}
             >
               {/* Background */}
               {hasImg ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={a.image}
-                    alt={a.title}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </>
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
               ) : (
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${BRIGHT[idx % BRIGHT.length]}`}
                 />
               )}
 
-              {/* Readability scrim, matched to the text color. Heavy on the
-                  left (where the text sits), fading over the image. */}
+              {/* Readability scrim, matched to the text color. */}
               {white ? (
                 <>
                   <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/10" />
@@ -117,7 +160,7 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
                       : "text-ink [text-shadow:0_1px_10px_rgba(255,255,255,0.65)]"
                   }
                 >
-                  {a.category && (
+                  {s.categoryName && (
                     <span
                       className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
                         white
@@ -125,27 +168,29 @@ export default function HeroCarousel({ articles }: { articles: Article[] }) {
                           : "bg-black/10 text-ink"
                       }`}
                     >
-                      <Icon name={a.category.iconName} className="h-3.5 w-3.5" />
-                      {a.category.name}
+                      {s.categoryIcon && (
+                        <Icon name={s.categoryIcon} className="h-3.5 w-3.5" />
+                      )}
+                      {s.categoryName}
                     </span>
                   )}
                   <h1 className="mt-4 max-w-3xl font-serif text-3xl font-bold leading-[1.12] sm:text-5xl">
-                    {a.title}
+                    {s.title}
                   </h1>
                   <p
                     className={`mt-4 max-w-2xl text-base leading-7 sm:text-lg ${
                       white ? "text-white/85" : "text-muted"
                     }`}
                   >
-                    {a.excerpt}
+                    {s.excerpt}
                   </p>
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold">
-                    Read article
+                    {s.cta ?? "Read more"}
                     <ArrowRight className="h-4 w-4" />
                   </span>
                 </div>
               </div>
-            </Link>
+            </SlideLink>
           );
         })}
 

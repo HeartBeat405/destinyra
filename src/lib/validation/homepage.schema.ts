@@ -34,6 +34,7 @@ export const HomepageWidgetSchema = z.object({
   bannerCtaLabel: z.string().max(60).optional(),
   bannerHref: z.string().max(500).optional(),
   adSlot: z.string().max(120).optional(),
+  source: z.enum(["latest", "featured", "trending", "news"]).optional(),
 });
 
 export const HomepageWidgetsSchema = z.array(HomepageWidgetSchema).max(40);

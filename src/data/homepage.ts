@@ -73,7 +73,7 @@ export const WIDGET_META: Record<
   string,
   { label: string; description: string; configurable: boolean }
 > = {
-  hero: { label: "Hero", description: "Full-width headline banner", configurable: false },
+  hero: { label: "Hero Carousel", description: "Full-width rotating banner (articles or news)", configurable: true },
   featured: { label: "Featured Story", description: "Large editor's pick + two cards", configurable: true },
   "editors-choice": { label: "Editor's Choice", description: "Highlighted editor's pick", configurable: true },
   trending: { label: "Trending", description: "Most-viewed trending articles", configurable: true },
@@ -90,6 +90,7 @@ export const WIDGET_META: Record<
 };
 
 export const ADDABLE_WIDGET_TYPES = [
+  "hero",
   "featured",
   "editors-choice",
   "trending",
