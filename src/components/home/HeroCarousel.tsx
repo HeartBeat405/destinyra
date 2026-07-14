@@ -174,11 +174,11 @@ export default function HeroCarousel({ slides: input }: { slides: HeroSlide[] })
                       {s.categoryName}
                     </span>
                   )}
-                  <h1 className="mt-4 max-w-3xl font-serif text-3xl font-bold leading-[1.12] sm:text-5xl">
+                  <h1 className="mt-4 line-clamp-3 max-w-3xl font-serif text-3xl font-bold leading-[1.12] sm:text-4xl lg:text-5xl">
                     {s.title}
                   </h1>
                   <p
-                    className={`mt-4 max-w-2xl text-base leading-7 sm:text-lg ${
+                    className={`mt-4 line-clamp-2 max-w-2xl text-base leading-7 sm:text-lg ${
                       white ? "text-white/85" : "text-muted"
                     }`}
                   >
