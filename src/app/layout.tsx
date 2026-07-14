@@ -48,9 +48,11 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     icons: s.general.faviconUrl ? { icon: s.general.faviconUrl } : undefined,
     robots: { index: true, follow: true },
-    verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-      : undefined,
+    verification: {
+      google:
+        process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+        "KVeE-N74bsofa7TwF70rjOJeDu1RaZlZgiYKK4qsZTs",
+    },
   };
 }
 
