@@ -10,8 +10,12 @@ create table if not exists public.reviews (
   rating     int not null check (rating between 1 and 5),
   comment    text not null,
   approved   boolean not null default true,
+  featured   boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+-- If the table already existed without `featured`, add it (safe to re-run):
+alter table public.reviews add column if not exists featured boolean not null default false;
 
 create index if not exists idx_reviews_created on public.reviews (created_at desc);
 

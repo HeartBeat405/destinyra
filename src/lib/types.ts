@@ -147,6 +147,8 @@ export type Review = {
   name: string;
   rating: number;
   comment: string;
+  approved?: boolean;
+  featured?: boolean;
   createdAt: string;
 };
 

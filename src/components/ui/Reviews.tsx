@@ -20,7 +20,7 @@ function Stars({ n }: { n: number }) {
 // Public reviews block: recent testimonials + a submit form (name, star
 // rating, comment). Replaces the old newsletter signup.
 export default async function Reviews() {
-  const reviews = await reviewsRepo.listApproved(6);
+  const reviews = await reviewsRepo.listForPublic(6);
 
   return (
     <section className="overflow-hidden rounded-4xl border border-line bg-brand-50 p-8 sm:p-12">

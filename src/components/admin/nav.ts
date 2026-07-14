@@ -24,6 +24,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { label: "Tools", href: "/admin/tools", iconName: "Wrench", resource: "tools", group: "Content" },
 
   { label: "Comments", href: "/admin/comments", iconName: "MessageSquare", resource: "comments", group: "Community" },
+  { label: "Reviews", href: "/admin/reviews", iconName: "Star", resource: "comments", group: "Community" },
   { label: "Newsletter", href: "/admin/newsletter", iconName: "Mail", resource: "newsletter", group: "Community" },
 
   { label: "Users", href: "/admin/users", iconName: "UserCog", resource: "users", group: "System" },
