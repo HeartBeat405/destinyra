@@ -14,7 +14,7 @@ export type FetchedNews = {
 };
 
 const DEFAULT_QUERY =
-  "spirituality OR wellness OR mindfulness OR astrology OR self improvement";
+  "health OR wellness OR lifestyle OR psychology OR relationships OR mindfulness OR motivation OR self improvement";
 
 export function isNewsConfigured(): boolean {
   return Boolean(process.env.NEWS_API_KEY);
