@@ -2,7 +2,7 @@ import type { Article, Author, Category } from "../types";
 import { supabase, isSupabaseConfigured, createAdminClient } from "../supabase";
 import { createServerSupabase } from "../db/supabase-server";
 import type { ArticleInput } from "../validation/article.schema";
-import { estimateReadingTime } from "../util/article";
+import { estimateReadingTime, slugify } from "../util/article";
 
 // ------------------------------------------------------------
 // Articles repository — the ONLY place article data is fetched.
@@ -10,7 +10,35 @@ import { estimateReadingTime } from "../util/article";
 // so UI components never perform their own data access.
 // ------------------------------------------------------------
 
-const SELECT = "*, category:categories(*), author:authors(*)";
+const SELECT =
+  "*, category:categories(*), author:authors(*), tags:article_tags(tag:tags(name))";
+
+// Sync an article's tags into the article_tags join table. Tag rows are
+// created on the fly (upsert by slug). Uses the service-role client so the
+// writes aren't blocked by RLS.
+async function syncTags(articleId: string, names: string[]): Promise<void> {
+  const admin = createAdminClient();
+  if (!admin) return;
+
+  await admin.from("article_tags").delete().eq("article_id", articleId);
+
+  const clean = [...new Set(names.map((t) => t.trim()).filter(Boolean))];
+  if (clean.length === 0) return;
+
+  const { data: tagRows } = await admin
+    .from("tags")
+    .upsert(
+      clean.map((name) => ({ name, slug: slugify(name) })),
+      { onConflict: "slug" }
+    )
+    .select("id");
+
+  const links = (tagRows ?? []).map((t: { id: string }) => ({
+    article_id: articleId,
+    tag_id: t.id,
+  }));
+  if (links.length) await admin.from("article_tags").insert(links);
+}
 
 function mapCategory(c: any): Category | undefined {
   if (!c) return undefined;
@@ -224,7 +252,10 @@ export const articlesRepo = {
         .single());
     }
     if (error || !data) return null;
-    return mapRow(data);
+    await syncTags(data.id, input.tags ?? []);
+    const mapped = mapRow(data);
+    mapped.tags = [...new Set((input.tags ?? []).map((t) => t.trim()).filter(Boolean))];
+    return mapped;
   },
 
   async update(
@@ -250,7 +281,10 @@ export const articlesRepo = {
         .single());
     }
     if (error || !data) return null;
-    return mapRow(data);
+    await syncTags(id, input.tags ?? []);
+    const mapped = mapRow(data);
+    mapped.tags = [...new Set((input.tags ?? []).map((t) => t.trim()).filter(Boolean))];
+    return mapped;
   },
 
   async setStatus(
